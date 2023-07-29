@@ -72,9 +72,6 @@ tabContainer.addEventListener('click', e => {
 //()=>{} no this
 
 const showLinks = function (e, opacity) {
-  console.log('this :>> ', this);
-  console.log('e.target :>> ', e.target);
-  console.log('opacity :>> ', opacity);
   const link = e.target;
   const siblings = link.closest('.nav').querySelectorAll('.nav__link');
   const logo = link.closest('.nav').querySelector('.nav__logo');
@@ -86,3 +83,23 @@ const showLinks = function (e, opacity) {
 };
 nav.addEventListener('mouseover', showLinks.bind(0.5));
 nav.addEventListener('mouseout', showLinks.bind(1));
+/**
+ * sticky nav
+ */
+const header = document.querySelector('.header');
+const stickyNav = entries => {
+  const [entry] = entries;
+  if (!entry.isIntersecting) {
+    nav.classList.add('sticky');
+  } else {
+    nav.classList.remove('sticky');
+  }
+};
+const navHeight = nav.getBoundingClientRect().height;
+const navObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  rootMargin: `-${navHeight}px`,
+  threshold: 0,
+});
+
+navObserver.observe(header);

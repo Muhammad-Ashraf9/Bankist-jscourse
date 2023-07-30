@@ -148,3 +148,69 @@ const imageObserver = new IntersectionObserver(lazyLoad, {
 LazyImages.forEach(img => {
   imageObserver.observe(img);
 });
+
+/**
+ *slider
+ */
+
+const slider = () => {
+  const slides = document.querySelectorAll('.slide');
+  const [dots] = document.querySelectorAll('.dots');
+  const btnSLideLeft = document.querySelector('.slider__btn--left');
+  const btnSLideRight = document.querySelector('.slider__btn--right');
+  let currentSLide = 0;
+
+  //functions
+
+  const slide = slide => {
+    slides.forEach((s, i) => {
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+    });
+  };
+  const slideLeft = () => {
+    currentSLide === 0 ? (currentSLide = slides.length - 1) : currentSLide--;
+    slide(currentSLide);
+    activateDot(currentSLide);
+  };
+  const slideRight = () => {
+    currentSLide === slides.length - 1 ? (currentSLide = 0) : currentSLide++;
+    slide(currentSLide);
+    activateDot(currentSLide);
+  };
+  const createDots = () => {
+    slides.forEach((s, i) => {
+      dots.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide=${i}></button>`
+      );
+    });
+    dots.querySelector('[data-slide="0"]').classList.add('dots__dot--active');
+  };
+  const slideDot = e => {
+    const dot = e.target;
+    if (!dot.classList.contains('dots__dot')) return;
+    currentSLide = dot.dataset.slide;
+    activateDot(currentSLide);
+    slide(currentSLide);
+  };
+  const activateDot = slide => {
+    const btnDots = document.querySelectorAll('.dots__dot');
+
+    btnDots.forEach(d => {
+      d.classList.remove('dots__dot--active');
+    });
+    dots
+      .querySelector(`[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+  };
+
+  //event listeners
+  btnSLideLeft.addEventListener('click', slideLeft);
+  btnSLideRight.addEventListener('click', slideRight);
+  dots.addEventListener('click', slideDot);
+
+  //
+  slide(0);
+  createDots();
+};
+slider();
